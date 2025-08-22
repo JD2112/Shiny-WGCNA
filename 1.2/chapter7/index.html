@@ -1,0 +1,671 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A Shiny app for DNA Methylation and Transcriptomics data analysis using WGCNA">
+      
+      
+        <meta name="author" content="Jyotirmoy Das">
+      
+      
+        <link rel="canonical" href="https://github.com/JD2112/Shiny-WGCNA/1.2/chapter7/">
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Chapter 7: Docker Containerization - Shiny-WGCNA</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../styles/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-7-docker-containerization" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Shiny-WGCNA" class="md-header__button md-logo" aria-label="Shiny-WGCNA" data-md-component="logo">
+      
+
+<a href="https://github.com/JD2112" target="_blank" style="display:flex; align-items:center; text-decoration:none;">
+  <img src="../images/JD_logo.png" alt="Logo" style="height:24px; margin-right:8px;">
+</a>
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Shiny-WGCNA
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 7: Docker Containerization
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/JD2112/Shiny-WGCNA" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../chapter1/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Tutorial
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../chapter2/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Theory
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../chapter3/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  WGCNA and Cytoscape
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Shiny-WGCNA" class="md-nav__button md-logo" aria-label="Shiny-WGCNA" data-md-component="logo">
+      
+
+<a href="https://github.com/JD2112" target="_blank" style="display:flex; align-items:center; text-decoration:none;">
+  <img src="../images/JD_logo.png" alt="Logo" style="height:24px; margin-right:8px;">
+</a>
+    </a>
+    Shiny-WGCNA
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/JD2112/Shiny-WGCNA" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+  
+  <li class="md-nav__item">
+    
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+    
+    
+    
+  </li>
+
+  
+  <li class="md-nav__item">
+    
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tutorial
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+    
+    
+    
+  </li>
+
+  
+  <li class="md-nav__item">
+    
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Theory
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+    
+    
+    
+  </li>
+
+  
+  <li class="md-nav__item">
+    
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chapter3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    WGCNA and Cytoscape
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+    
+    
+    
+  </li>
+
+
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/JD2112/Shiny-WGCNA/edit/master/docs/chapter7.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="chapter-7-docker-containerization">Chapter 7: Docker Containerization<a class="headerlink" href="#chapter-7-docker-containerization" title="Permanent link">&para;</a></h1>
+<p>In the <a href="../chapter6/">previous chapter</a>, we wrapped up our exploration of <code>Shiny-WGCNA</code> by understanding how to export your valuable analysis results and visualizations. You've learned how to upload data, run complex analyses, view insightful plots, and save everything for further use or sharing. That's a complete workflow!</p>
+<p>But imagine this: you've successfully installed R, all the necessary R packages (like <code>shiny</code> and <code>WGCNA</code>), and got <code>Shiny-WGCNA</code> running perfectly on your computer. Now, a colleague in another lab wants to use it. They might have a different operating system (like Linux instead of Windows), an older version of R, or just don't want to spend hours installing all the specific R packages and their dependencies. How do you make it super easy for them to get <code>Shiny-WGCNA</code> up and running, exactly as it works on your machine, without any compatibility headaches?</p>
+<p>This is where <strong>Docker Containerization</strong> comes in! It's a powerful and elegant solution that solves the common problem of "it works on my machine, but not on yours."</p>
+<h3 id="what-problem-does-docker-containerization-solve">What Problem Does Docker Containerization Solve?<a class="headerlink" href="#what-problem-does-docker-containerization-solve" title="Permanent link">&para;</a></h3>
+<p>Think of <code>Shiny-WGCNA</code> as a complex appliance, like a high-tech microwave. It needs electricity (an operating system), specific parts (R and its libraries), and the actual cooking mechanism (your <code>Shiny-WGCNA</code> app code).</p>
+<p>Traditionally, if you wanted to give your friend a microwave, you'd have to send them:
+1.  All the individual components (wires, metal sheets, electronic boards).
+2.  Instructions on how to assemble it.
+3.  A specific power supply.
+This is tedious and prone to errors (what if they use the wrong wire, or their power supply is different?).</p>
+<p>The problem Docker Containerization solves is this: <strong>ensuring that <code>Shiny-WGCNA</code> (or any software) runs consistently and reproducibly on <em>any</em> computer, without complex setup or dependency conflicts.</strong></p>
+<p>Docker allows us to package the entire <code>Shiny-WGCNA</code> application – along with its operating system, the exact R version it needs, and <em>all</em> the required R libraries – into a lightweight, portable, and self-sufficient unit. This unit is called a <strong>Docker Image</strong>. When you run a Docker Image, it becomes a <strong>Docker Container</strong>, which is a complete, ready-to-use, isolated environment for your app.</p>
+<p>It's like shipping a complete, ready-to-use microwave directly to your friend. They just plug it in, and it works, no assembly required!</p>
+<h3 id="key-concepts-of-docker-containerization">Key Concepts of Docker Containerization<a class="headerlink" href="#key-concepts-of-docker-containerization" title="Permanent link">&para;</a></h3>
+<p>To understand Docker, let's break down a few key terms:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Concept</th>
+<th style="text-align: left;">Analogy (Microwave)</th>
+<th style="text-align: left;">What it means for <code>Shiny-WGCNA</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Docker</strong></td>
+<td style="text-align: left;">The delivery service that handles microwaves.</td>
+<td style="text-align: left;">A tool that allows you to build, run, and manage containers.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Containerization</strong></td>
+<td style="text-align: left;">The act of packaging the microwave neatly.</td>
+<td style="text-align: left;">The strategy of bundling an application and all its dependencies into an isolated, self-sufficient unit.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Docker Image</strong></td>
+<td style="text-align: left;">The blueprint or recipe for a specific microwave model.</td>
+<td style="text-align: left;">A lightweight, standalone, executable package that includes everything needed to run <code>Shiny-WGCNA</code>: code, runtime, system tools, libraries, and settings. It's read-only.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Docker Container</strong></td>
+<td style="text-align: left;">An actual, running microwave, built from the blueprint.</td>
+<td style="text-align: left;">A runnable instance of a Docker Image. You can start, stop, move, or delete a container. It's an isolated environment where <code>Shiny-WGCNA</code> runs.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Dockerfile</strong></td>
+<td style="text-align: left;">The instruction manual for building the microwave.</td>
+<td style="text-align: left;">A simple text file that contains all the commands needed to automatically build a Docker Image. (We'll look at this very briefly).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-to-use-docker-to-run-shiny-wgcna-the-use-case-solution">How to Use Docker to Run <code>Shiny-WGCNA</code> (The Use Case Solution)<a class="headerlink" href="#how-to-use-docker-to-run-shiny-wgcna-the-use-case-solution" title="Permanent link">&para;</a></h3>
+<p>Let's imagine your friend, who has Docker installed on their computer, wants to run <code>Shiny-WGCNA</code>. They don't need to install R or any R packages. They just need one command!</p>
+<p><strong>Prerequisite:</strong> Make sure you have <a href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a> (or Docker Engine) installed on your computer.</p>
+<p><strong>The Magic Command:</strong>
+Open your computer's command line or terminal and type:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">3838</span>:3838<span class="w"> </span>jd21/shinywgcna:latest
+</code></pre></div>
+<p><strong>What happens after you run this command:</strong>
+1.  <strong>Docker fetches the Image:</strong> Docker checks if it already has the <code>jd21/shinywgcna:latest</code> image downloaded on your computer. If not (first time running), it automatically downloads it from Docker Hub (a public registry of Docker Images). This is like your delivery service getting the specific microwave model from the warehouse.
+2.  <strong>Docker creates a Container:</strong> Once the image is available, Docker creates a new isolated container from it.
+3.  <strong><code>Shiny-WGCNA</code> starts:</strong> Inside this container, <code>Shiny-WGCNA</code> starts running, just as it would if you ran <code>shiny::runApp("app.R")</code> directly on a computer with R installed.
+4.  <strong>Access in your browser:</strong> The <code>-p 3838:3838</code> part of the command tells Docker to connect the app's internal port (3838) to your computer's port (3838). This means you can open your web browser and go to <code>http://localhost:3838</code>. You will see <code>Shiny-WGCNA</code> running!</p>
+<p>This single command allows anyone with Docker to run <code>Shiny-WGCNA</code> without any manual setup of R or its libraries. It's incredibly convenient, especially for sharing complex bioinformatics tools! The <code>README.md</code> for <code>Shiny-WGCNA</code> shows this exact command:</p>
+<div class="highlight"><pre><span></span><code>docker run --rm -p 3838:3838 jd21/shinywgcna:latest
+</code></pre></div>
+<h3 id="behind-the-scenes-how-docker-works-its-magic">Behind the Scenes: How Docker Works Its Magic<a class="headerlink" href="#behind-the-scenes-how-docker-works-its-magic" title="Permanent link">&para;</a></h3>
+<p>When you run that <code>docker run</code> command, a lot is happening in the background to make <code>Shiny-WGCNA</code> available to you.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant User
+    participant YourTerminal
+    participant DockerClient
+    participant DockerEngine
+    participant DockerHub
+    participant DockerContainer
+
+    User-&gt;&gt;YourTerminal: Types `docker run ...` command
+    YourTerminal-&gt;&gt;DockerClient: Sends command to Docker Client
+    DockerClient-&gt;&gt;DockerEngine: "Start a container from `jd21/shinywgcna:latest`!"
+    DockerEngine-&gt;&gt;DockerEngine: Checks if image exists locally
+    alt Image Not Found Locally
+        DockerEngine-&gt;&gt;DockerHub: "Please send `jd21/shinywgcna:latest` image."
+        DockerHub--&gt;&gt;DockerEngine: Sends the Docker Image (blueprint)
+    end
+    DockerEngine-&gt;&gt;DockerEngine: Creates an isolated environment (the Container)
+    DockerEngine-&gt;&gt;DockerContainer: Starts `Shiny-WGCNA` inside the container
+    DockerContainer--&gt;&gt;DockerEngine: "Shiny-WGCNA is running on port 3838"
+    DockerEngine-&gt;&gt;YourTerminal: Maps container port 3838 to your computer's port 3838
+    YourTerminal-&gt;&gt;User: "App is ready at http://localhost:3838"
+    User-&gt;&gt;YourTerminal: (Optional) Press Ctrl+C to stop container
+    YourTerminal-&gt;&gt;DockerEngine: Stops and removes container (`--rm`)</code></pre>
+<p><strong>The Dockerfile: The Recipe for the Image</strong></p>
+<p>So, where does that <code>jd21/shinywgcna:latest</code> image come from? It's built from a special text file called a <code>Dockerfile</code>. This file contains step-by-step instructions on how to assemble the <code>Shiny-WGCNA</code> "microwave."</p>
+<p>Here's a simplified idea of what instructions a <code>Dockerfile</code> for <code>Shiny-WGCNA</code> might contain (this is not the actual <code>Dockerfile</code> for <code>Shiny-WGCNA</code>, but a conceptual example):</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Start from a base image that already has R installed</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">r-base:latest</span>
+
+<span class="c"># Install system dependencies needed by R packages</span>
+<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>libxml2-dev<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>#<span class="w"> </span>...<span class="w"> </span>more<span class="w"> </span>system<span class="w"> </span>dependencies<span class="w"> </span>...
+
+<span class="c"># Install R packages needed for Shiny-WGCNA</span>
+<span class="k">RUN</span><span class="w"> </span>R<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;install.packages(c(&#39;shiny&#39;, &#39;WGCNA&#39;, &#39;DT&#39;, &#39;pheatmap&#39;, &#39;shinyjs&#39;, &#39;bslib&#39;, &#39;tidyverse&#39;, &#39;jsonlite&#39;, &#39;rhandsontable&#39;), repos=&#39;https://cloud.r-project.org/&#39;)&quot;</span>
+
+<span class="c"># Copy your Shiny-WGCNA application files into the image</span>
+<span class="k">COPY</span><span class="w"> </span>app/<span class="w"> </span>/app/
+
+<span class="c"># Set the working directory inside the container</span>
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+
+<span class="c"># Tell Docker that the application listens on port 3838</span>
+<span class="k">EXPOSE</span><span class="w"> </span><span class="s">3838</span>
+
+<span class="c"># Command to run when the container starts</span>
+<span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;-e&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;shiny::runApp(&#39;/app&#39;, host=&#39;0.0.0.0&#39;, port=3838)&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Explanation of the (conceptual) Dockerfile:</strong>
+*   <code>FROM r-base:latest</code>: This line tells Docker to start with a pre-built image that already has R installed. It's like saying, "Start with a basic framework."
+*   <code>RUN ...</code>: These lines execute commands inside the image during the build process. Here, it installs any operating system libraries and then all the necessary R packages (like <code>shiny</code>, <code>WGCNA</code>, <code>DT</code>, etc.) that <code>Shiny-WGCNA</code> depends on.
+*   <code>COPY app/ /app/</code>: This line copies all the files for your <code>Shiny-WGCNA</code> application (your <code>app.R</code>, <code>ui</code> folder, <code>server</code> folder, etc.) from your computer into the <code>/app</code> directory inside the Docker Image.
+*   <code>WORKDIR /app</code>: Sets the default directory when the container starts.
+*   <code>EXPOSE 3838</code>: Informs Docker that the application inside the container will use port 3838.
+*   <code>CMD [...]</code>: This is the command that gets executed automatically when a container is launched from this image. It runs the Shiny application.</p>
+<p>The <code>README.md</code> also shows how the <code>docker-image.yml</code> file in the <code>.github/workflows</code> directory is used with GitHub Actions to <em>automatically build and publish</em> this Docker image whenever changes are pushed to the project. This ensures that the <code>latest</code> image is always up-to-date.</p>
+<p><div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/docker-image.yml (simplified Build and Push step)</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build and push</span>
+<span class="w">  </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">docker/build-push-action@v6</span>
+<span class="w">  </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span><span class="w"> </span><span class="c1"># Looks for a Dockerfile in the current directory</span>
+<span class="w">    </span><span class="nt">push</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"> </span><span class="c1"># Uploads the image to Docker Hub</span>
+<span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">${{ steps.meta.outputs.tags }}</span>
+<span class="w">      </span><span class="no">jd21/shinywgcna:latest # Tags the image as &#39;jd21/shinywgcna:latest&#39;</span>
+</code></pre></div>
+This automated process is how the <code>jd21/shinywgcna:latest</code> image becomes available on Docker Hub for everyone to easily download and run.</p>
+<h3 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h3>
+<p>Docker Containerization is the ultimate solution for sharing and deploying <code>Shiny-WGCNA</code> (and other software) effortlessly. By packaging the entire application and its environment into a self-contained unit, it eliminates compatibility issues, simplifies setup, and ensures that your bioinformatics tool works consistently, reliably, and reproducibly, no matter where it's used. You've now seen how <code>Shiny-WGCNA</code> is built from the ground up, from its interactive interface and powerful analytical engine to its robust data management, insightful visualizations, flexible export options, and finally, its seamless deployment via Docker.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+  <div style="
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 1.5em;
+    padding: 1em 2em;
+    border-top: 1px solid #000000;
+    color: #ffffff;
+    text-align: center;
+    background-color: #000000;
+  ">
+    <div style="flex: 1; text-align: left;">
+        © Jyotirmoy Das 2025 
+    </div>
+    <div style="flex: 1; text-align: center;">
+      <code style="font-size: 0.8em;">
+        3D1F C87F 8D52 BFD4 5A1D <br> 3C86 63F2 2E14 6A0A 6B98
+      </code>
+    </div>
+    <div style="flex: 1; text-align: right;">
+      Made with <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" style="color: #ffffff;">MkDocs</a>
+    </div>
+  </div>
+
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.sections", "navigation.top", "content.code.annotate", "content.tabs.link", "navigation.tabs", "search.suggest", "search.highlight", "toc.integrate", "content.action.edit", "content.code.copy", "versioning", "icons"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="https://fonts.googleapis.com/css2?family=Fira+Code&amp;family=Inter:wght@400;600&amp;display=swap"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+  </body>
+</html>
