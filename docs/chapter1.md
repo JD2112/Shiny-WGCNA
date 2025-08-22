@@ -42,9 +42,9 @@ After successfully uploading your data, the "Input Preview" tab will automatical
 - **Purpose:** This tab serves as a confirmation step, allowing you to quickly verify that your data has been uploaded correctly and that the format is as expected.
 
 - **What to Check:**
-  - Ensure that the gene names in the first column appear correctly.
-  - Confirm that the sample headers are correct.
-  - Visually inspect a few rows to ensure the expression values are loaded properly.
+    - Ensure that the gene names in the first column appear correctly.
+    - Confirm that the sample headers are correct.
+    - Visually inspect a few rows to ensure the expression values are loaded properly.
 
 - **Data Integrity:** If there are any issues with the data format or structure, the app will provide error messages to guide you in correcting them.
 
@@ -56,6 +56,31 @@ After successfully uploading your data, the "Input Preview" tab will automatical
 ### Running the Analysis
 
 #### Parameters setup
+
+**1. Soft Threshold Power ($\beta$)**
+
+The soft threshold power, or $\beta$, is the most important parameter in WGCNA. It's a value used to transform the gene correlation matrix into an adjacency matrix that reflects a scale-free network topology. In a scale-free network, a few highly connected hub genes link to many other genes, while most genes have only a few connections. This structure mimics real biological networks. The WGCNA package includes the `pickSoftThreshold` function to help you choose the best 
+$\beta$ value for your dataset.
+
+**2. Minimum Module Size (minModuleSize)**
+
+This parameter controls the smallest number of genes allowed in a single module. Genes that don't fit into a module of at least this size are typically placed in the "grey" module, which represents unassigned genes. Setting a smaller `minModuleSize` will result in more, smaller modules, while a larger value will result in fewer, larger modules. The choice depends on the level of granularity you need for your analysis.
+
+**3. Merge Cut Height (mergeCutHeight)**
+
+The `mergeCutHeight` parameter is used to merge similar modules after initial detection. It is a value between 0 and 1 that acts as a threshold for the module eigengene clustering. Modules with a distance (1 - correlation) below this threshold will be merged. Setting a low `mergeCutHeight` will cause more modules to be merged, simplifying your network. A higher value will maintain a more granular module structure.
+
+**4. Network Type**
+
+This parameter defines how you treat positive and negative gene correlations when building the network. There are three main options:
+
+- **unsigned:** Both strong positive and strong negative correlations are considered equally important connections. This is the simplest option and is useful when the direction of correlation isn't biologically relevant.
+- **signed:** This approach considers both the strength and direction of the correlation. It creates separate modules for positively and negatively correlated genes.
+- **signed hybrid:** A compromise between the two. Strong positive correlations are treated as strong connections, while negative correlations are treated as weak connections.
+
+**5. Number of Cores (nCores)**
+
+WGCNA can be computationally intensive, especially for large datasets. The `nCores` parameter allows you to use parallel processing to speed up the analysis. You can set the number of cores to match your computer's resources, which can significantly reduce the runtime of functions like `blockwiseModules`.
 
 ![](images/parameters.png)
 
