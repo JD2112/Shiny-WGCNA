@@ -1,0 +1,77 @@
+site_name: "Shiny-WGCNA"
+site_author: Jyotirmoy Das
+site_description: "A Shiny app for DNA Methylation and Transcriptomics data analysis using WGCNA"
+site_url: "https://github.com/JD2112/Shiny-WGCNA"
+repo_url: "https://github.com/JD2112/Shiny-WGCNA"
+theme:
+  name: material
+  custom_dir: docs/overrides
+  palette:
+    primary: blue grey
+    accent: blue
+  font:
+    text: Inter
+    code: Fira Code
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.expand
+    - navigation.sections
+    - navigation.top
+    - content.code.annotate
+    - content.tabs.link
+    - navigation.tabs
+    - search.suggest
+    - search.highlight
+    - toc.integrate
+    - content.action.edit
+    - content.code.copy
+    - versioning
+    - icons
+
+plugins:
+  - search
+  - mike
+
+markdown_extensions:
+  - admonition
+  - abbr
+  - attr_list  
+  - pymdownx.details  
+  - pymdownx.tabbed
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.emoji
+  - pymdownx.extra
+  - pymdownx.arithmatex:
+      generic: true
+  - codehilite
+  - toc:
+      permalink: true     
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Home: index.md
+  - Tutorial: chapter1.md
+  - Theory: chapter2.md
+  - WGCNA and Cytoscape: chapter3.md
+  # - Module-Trait Correlation: chapter4.md
+  # - Network Heatmap: chapter5.md
+  # - Scatter Plot: chapter6.md  
+
+extra:
+  version:
+    provider: mike
+  current_year: !!python/object/apply:str ["2025"]
+
+extra_css:
+  - styles/extra.css
+
+extra_javascript:
+  - https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@400;600&display=swap
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML
