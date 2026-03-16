@@ -1,0 +1,18 @@
+Package: ShinyWGCNA
+Type: Package
+Title: A Shiny implementation for WGCNA
+Version: 0.1.0
+Authors@R: person("Jyotirmoy", "Das", email = "jd2112@example.com", role = c("aut", "cre"))
+Description: An interactive dashboard for WGCNA.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Imports:
+    shiny,
+    bslib,
+    shinyjs,
+    DT,
+    plotly,
+    WGCNA,
+    ComplexHeatmap,
+    pheatmap,
+    doParallel
